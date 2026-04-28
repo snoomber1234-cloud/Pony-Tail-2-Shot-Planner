@@ -1,0 +1,451 @@
+import React, { useState, useMemo, useRef } from 'react';
+import { Search, Plus, Minus, Filter, X, Download, Sun, ArrowDown } from 'lucide-react';
+
+const App = () => {
+  const summaryRef = useRef(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  // Database
+  const scheduleData = {
+    "Saturday, 13 JUN 26": {
+      short: "SAT 13 JUN",
+      theme: "from-purple-800 to-indigo-950",
+      accent: "text-purple-400",
+      tabColor: "bg-purple-800",
+      barColor: "bg-purple-500",
+      summaryBg: "bg-purple-950",
+      members: [
+        { name: "FAME", group: "BIII", rounds: [1, 3, 6] },
+        { name: "HOOP", group: "BIII", rounds: [3, 5, 7] },
+        { name: "JANRY", group: "BIII", rounds: [2, 4, 6] },
+        { name: "MARINE", group: "BIII", rounds: [1, 3, 5] },
+        { name: "MICHA", group: "BIII", rounds: [2, 5, 7] },
+        { name: "MONET", group: "BIII", rounds: [2, 4, 6] },
+        { name: "PATT", group: "BIII", rounds: [1, 3, 6] },
+        { name: "WAWA", group: "BIII", rounds: [1, 3, 6] },
+        { name: "ARLEE", group: "NV", rounds: [1, 4, 6] },
+        { name: "BERRY", group: "NV", rounds: [5, 7] },
+        { name: "EMMY", group: "NV", rounds: [2, 4, 6] },
+        { name: "L", group: "NV", rounds: [3, 5, 7] },
+        { name: "PALMMY", group: "NV", rounds: [2, 4, 6] },
+        { name: "PANCAKE", group: "NV", rounds: [1, 3, 5] },
+        { name: "PROUD", group: "NV", rounds: [2, 4, 7] },
+        { name: "SINDY", group: "NV", rounds: [2, 4, 7] },
+        { name: "YOGHURT", group: "NV", rounds: [2, 4, 6] },
+        { name: "BLYTHE", group: "Trainee", rounds: [1, 4, 6] },
+        { name: "CARTOON", group: "Trainee", rounds: [5, 7] },
+        { name: "GALEYA", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "GRAPE", group: "Trainee", rounds: [1, 3, 5] },
+        { name: "INKCHA", group: "Trainee", rounds: [2, 4, 6] },
+        { name: "JEW", group: "Trainee", rounds: [2, 4, 6] },
+        { name: "KHAIMOOK", group: "Trainee", rounds: [1, 3, 5] },
+        { name: "KHOWJOW", group: "Trainee", rounds: [3, 5, 7] },
+        { name: "LUKSORN", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "MAIL", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "MAYJI", group: "Trainee", rounds: [1, 2, 3] },
+        { name: "MINT", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "MIRIN", group: "Trainee", rounds: [4, 7] },
+        { name: "NALL", group: "Trainee", rounds: [1, 3, 5] },
+        { name: "NAMMONN", group: "Trainee", rounds: [4, 5, 7] },
+        { name: "NEEN", group: "Trainee", rounds: [3, 5, 6] },
+        { name: "NIYA", group: "Trainee", rounds: [1, 3, 6] },
+        { name: "PRAEW", group: "Trainee", rounds: [1, 3, 5] },
+        { name: "ROSE", group: "Trainee", rounds: [1, 3, 6] },
+        { name: "SAONOI", group: "Trainee", rounds: [1, 3, 5] },
+      ]
+    },
+    "Sunday, 14 JUN 26": {
+      short: "SUN 14 JUN",
+      theme: "from-red-700 to-rose-950",
+      accent: "text-red-400",
+      tabColor: "bg-red-700",
+      barColor: "bg-red-400",
+      summaryBg: "bg-rose-950",
+      members: [
+        { name: "FAME", group: "BIII", rounds: [5, 7] },
+        { name: "HOOP", group: "BIII", rounds: [3, 5, 7] },
+        { name: "JANRY", group: "BIII", rounds: [2, 4, 7] },
+        { name: "MARINE", group: "BIII", rounds: [2, 4, 7] },
+        { name: "MICHA", group: "BIII", rounds: [1, 3, 6] },
+        { name: "MONET", group: "BIII", rounds: [2, 4, 7] },
+        { name: "PATT", group: "BIII", rounds: [1, 3, 7] },
+        { name: "WAWA", group: "BIII", rounds: [1, 4, 6] },
+        { name: "ARLEE", group: "NV", rounds: [1, 3, 6] },
+        { name: "BERRY", group: "NV", rounds: [1, 3, 6] },
+        { name: "EMMY", group: "NV", rounds: [2, 5, 7] },
+        { name: "L", group: "NV", rounds: [1, 3, 5] },
+        { name: "PALMMY", group: "NV", rounds: [5, 7] },
+        { name: "PANCAKE", group: "NV", rounds: [2, 5, 7] },
+        { name: "PROUD", group: "NV", rounds: [2, 4, 6] },
+        { name: "SINDY", group: "NV", rounds: [1, 3, 6] },
+        { name: "YOGHURT", group: "NV", rounds: [3, 5, 7] },
+        { name: "BLYTHE", group: "Trainee", rounds: [2, 4, 6] },
+        { name: "CARTOON", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "GALEYA", group: "Trainee", rounds: [1, 3, 5] },
+        { name: "GRAPE", group: "Trainee", rounds: [3, 5] },
+        { name: "INKCHA", group: "Trainee", rounds: [5, 7] },
+        { name: "JEW", group: "Trainee", rounds: [1, 4, 6] },
+        { name: "KHAIMOOK", group: "Trainee", rounds: [4, 6] },
+        { name: "KHOWJOW", group: "Trainee", rounds: [2, 4, 6] },
+        { name: "LUKSORN", group: "Trainee", rounds: [2, 5, 7] },
+        { name: "MAIL", group: "Trainee", rounds: [4, 6] },
+        { name: "MAYJI", group: "Trainee", rounds: [1, 2] },
+        { name: "MINT", group: "Trainee", rounds: [2, 4] },
+        { name: "MIRIN", group: "Trainee", rounds: [1, 3, 6] },
+        { name: "NALL", group: "Trainee", rounds: [3, 5] },
+        { name: "NAMMONN", group: "Trainee", rounds: [3, 5, 7] },
+        { name: "NEEN", group: "Trainee", rounds: [2, 4, 7] },
+        { name: "NIYA", group: "Trainee", rounds: [2, 4, 6] },
+        { name: "PRAEW", group: "Trainee", rounds: [2, 5, 7] },
+        { name: "ROSE", group: "Trainee", rounds: [1, 3] },
+        { name: "SAONOI", group: "Trainee", rounds: [1, 4] },
+      ]
+    }
+  };
+
+  const roundTimes = {
+    1: { time: "11:00 - 12:00", close: "11:45" },
+    2: { time: "12:15 - 13:15", close: "13:00" },
+    3: { time: "13:30 - 14:30", close: "14:15" },
+    4: { time: "14:45 - 15:45", close: "15:30" },
+    5: { time: "16:00 - 17:00", close: "16:45" },
+    6: { time: "17:15 - 18:15", close: "18:00" },
+    7: { time: "18:30 - 19:30", close: "19:15" },
+  };
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDay, setSelectedDay] = useState("Saturday, 13 JUN 26");
+  const [checklist, setChecklist] = useState({});
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+
+  const handleManualInput = (day, member, round, value) => {
+    const key = `${day}-${member}-${round}`;
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue) || numValue <= 0) {
+      const { [key]: _, ...rest } = checklist;
+      setChecklist(rest);
+    } else {
+      setChecklist(prev => ({ ...prev, [key]: numValue }));
+    }
+  };
+
+  const updateCount = (day, member, round, delta) => {
+    const key = `${day}-${member}-${round}`;
+    setChecklist(prev => {
+      const current = prev[key] || 0;
+      const next = Math.max(0, current + delta);
+      if (next === 0) {
+        const { [key]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const filteredMembers = useMemo(() => {
+    return (scheduleData[selectedDay]?.members || [])
+      .filter(m => {
+        const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = selectedMembers.length === 0 || selectedMembers.includes(m.name);
+        return matchesSearch && matchesFilter;
+      })
+      .sort((a, b) => a.group.localeCompare(b.group));
+  }, [selectedDay, searchTerm, selectedMembers]);
+
+  const totalTickets = Object.values(checklist).reduce((acc, curr) => acc + curr, 0);
+
+  const groupedSummary = useMemo(() => {
+    const items = Object.entries(checklist)
+      .map(([key, count]) => {
+        const [day, member, round] = key.split("-");
+        const memberInfo = scheduleData[day]?.members.find(m => m.name === member);
+        return { 
+          day, member, group: memberInfo?.group, 
+          round: parseInt(round), count, ...roundTimes[round] 
+        };
+      })
+      .sort((a, b) => a.round - b.round);
+
+    const groups = {};
+    Object.keys(scheduleData).forEach(day => {
+      groups[day] = items.filter(i => i.day === day);
+    });
+    return groups;
+  }, [checklist]);
+
+  const exportAsPNG = async () => {
+    if (!summaryRef.current) return;
+    setIsExporting(true);
+    try {
+      if (!window.html2canvas) {
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+        document.head.appendChild(script);
+        await new Promise((resolve) => (script.onload = resolve));
+      }
+      
+      const canvas = await window.html2canvas(summaryRef.current, {
+        backgroundColor: '#020617',
+        scale: 3, 
+        useCORS: true,
+        logging: false,
+        letterRendering: true,
+        allowTaint: true,
+      });
+      
+      const link = document.createElement('a');
+      link.download = `BNK48_2Shot_Plan.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+    } catch (err) { 
+      console.error(err); 
+    } finally { 
+      setIsExporting(false); 
+    }
+  };
+
+  const scrollToSummary = () => {
+    summaryRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const getGroupColors = (group) => {
+    if (group === 'BIII') return { bg: 'bg-amber-100', text: 'text-amber-900', border: 'border-amber-400' };
+    if (group === 'NV') return { bg: 'bg-indigo-100', text: 'text-indigo-900', border: 'border-indigo-400' };
+    if (group === 'Trainee') return { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-400' };
+    return { bg: 'bg-slate-100', text: 'text-slate-900', border: 'border-slate-400' };
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F0F2F5] font-sans text-slate-900 pb-32">
+      {/* Header */}
+      <div className={`bg-gradient-to-br ${scheduleData[selectedDay].theme} pt-14 pb-24 px-6 text-white relative overflow-hidden transition-all duration-700 shadow-xl`}>
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2 opacity-90">
+            <Sun className="text-amber-400" size={16} fill="currentColor" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">BNK48 18th Single</span>
+          </div>
+          <h1 className="text-5xl font-[1000] italic uppercase leading-[0.85] tracking-tighter drop-shadow-[0_4px_4px_rgba(0,0,0,0.3)]">PONYTAIL<br/>2-SHOT</h1>
+        </div>
+      </div>
+
+      <div className="max-w-md mx-auto px-4 -mt-16 relative z-20">
+        
+        {/* Date Tabs */}
+        <div className="flex gap-2 p-2 bg-white/80 backdrop-blur-xl rounded-[32px] shadow-2xl mb-8 border border-white">
+          {Object.keys(scheduleData).map(day => (
+            <button
+              key={day}
+              onClick={() => setSelectedDay(day)}
+              className={`flex-1 py-4 rounded-[26px] transition-all duration-300 transform ${
+                selectedDay === day 
+                ? `${scheduleData[day].tabColor} text-white shadow-lg scale-[1.05] z-10` 
+                : 'bg-transparent text-slate-400 grayscale opacity-60'
+              }`}
+            >
+              <div className="text-xl font-black leading-none uppercase tracking-tighter">{scheduleData[day].short.split(' ')[0]}</div>
+              <div className="text-[10px] font-bold opacity-80 mt-1 uppercase tracking-widest">{scheduleData[day].short.split(' ').slice(1).join(' ')}</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Search & Filter */}
+        <div className="flex items-center gap-3 mb-8">
+            <div className="relative flex-grow shadow-lg rounded-3xl overflow-hidden">
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <input
+                    type="text"
+                    placeholder="ค้นหาชื่อเมมเบอร์..."
+                    className="w-full pl-12 pr-6 py-5 bg-white border-none outline-none text-[16px] font-bold text-slate-800"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+            <button 
+                onClick={() => setShowFilterModal(true)}
+                className={`shrink-0 w-16 h-16 rounded-3xl flex items-center justify-center transition-all shadow-lg ${selectedMembers.length > 0 ? 'bg-slate-900 text-amber-400' : 'bg-white text-slate-400'}`}
+            >
+                <Filter size={24} strokeWidth={3} />
+            </button>
+        </div>
+
+        {/* Member Cards */}
+        <div className="space-y-6 mb-16">
+            {filteredMembers.map(member => (
+                <div key={member.name} className="bg-white rounded-[32px] p-6 shadow-md border-2 border-transparent">
+                    <div className="flex items-center gap-5 mb-6">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl ${getGroupColors(member.group).bg} ${getGroupColors(member.group).text}`}>
+                            {member.name.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-h-[50px] flex flex-col justify-center">
+                            <span className="font-[1000] text-slate-900 text-2xl tracking-tighter uppercase leading-[1.1]">{member.name}</span>
+                            <div className="mt-1">
+                                <span className={`text-[9px] px-2 py-0.5 rounded-md font-black border-2 uppercase tracking-widest ${getGroupColors(member.group).bg} ${getGroupColors(member.group).text} ${getGroupColors(member.group).border}`}>
+                                    {member.group}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                        {member.rounds.map(r => {
+                            const val = checklist[`${selectedDay}-${member.name}-${r}`] || "";
+                            const isFilled = val !== "";
+                            return (
+                                <div key={r} className={`flex items-center gap-3 p-3 rounded-2xl border-2 ${isFilled ? 'bg-slate-900 border-slate-900' : 'bg-slate-50 border-slate-100'}`}>
+                                    <div className="flex-1 pl-2">
+                                        <div className={`text-[10px] font-black uppercase ${isFilled ? 'text-amber-400' : 'text-slate-400'}`}>รอบที่ {r}</div>
+                                        <div className={`text-[11px] font-bold ${isFilled ? 'text-white/60' : 'text-slate-300'}`}>{roundTimes[r].time}</div>
+                                    </div>
+                                    <div className={`flex items-center rounded-xl border-2 p-1.5 ${isFilled ? 'bg-white/10 border-white/10' : 'bg-white border-slate-200'}`}>
+                                        <button onClick={() => updateCount(selectedDay, member.name, r, -1)} className={`w-10 h-10 flex items-center justify-center ${isFilled ? 'text-rose-400' : 'text-rose-500'}`}><Minus size={22} strokeWidth={4} /></button>
+                                        <input type="number" inputMode="numeric" value={val} onChange={(e) => handleManualInput(selectedDay, member.name, r, e.target.value)} className={`w-10 text-center font-black text-xl outline-none bg-transparent ${isFilled ? 'text-white' : 'text-slate-800'}`} placeholder="0" />
+                                        <button onClick={() => updateCount(selectedDay, member.name, r, 1)} className={`w-10 h-10 flex items-center justify-center ${isFilled ? 'text-amber-400' : 'text-sky-600'}`}><Plus size={22} strokeWidth={4} /></button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        {/* SUMMARY SECTION */}
+        {totalTickets > 0 && (
+          <div className="mt-20 mb-40 pt-10">
+            <div className="flex justify-between items-center mb-8">
+                <h3 className="text-slate-900 font-[1000] text-3xl uppercase tracking-tighter">THE PLAN</h3>
+                <button onClick={exportAsPNG} className="bg-slate-900 text-amber-400 w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl active:scale-95 transition-transform">
+                   {isExporting ? <div className="w-6 h-6 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" /> : <Download size={28} strokeWidth={3} />}
+                </button>
+            </div>
+
+            {/* Export Card */}
+            <div ref={summaryRef} className="bg-[#020617] rounded-[40px] p-7 shadow-2xl text-white relative overflow-hidden mb-12 border border-white/5">
+                <div className="flex justify-between items-start mb-10 relative z-10">
+                    <div>
+                        <div className="inline-block px-2 py-0.5 rounded-md bg-amber-400 text-black text-[8px] font-[1000] tracking-[0.2em] mb-2 uppercase">BNK48 18th Single</div>
+                        <h4 className="text-3xl font-[1000] italic leading-[0.85] tracking-tighter uppercase text-white/90">MY<br/>SCHEDULE</h4>
+                    </div>
+                    <div className="text-right flex flex-col items-end">
+                        <div className="w-10 h-1 bg-amber-400 mb-1.5"></div>
+                        <div className="text-[9px] font-black opacity-30 uppercase tracking-[0.2em]">PONYTAIL 2-SHOT</div>
+                    </div>
+                </div>
+
+                <div className="space-y-10 relative z-10">
+                    {Object.entries(groupedSummary).map(([day, items]) => items.length > 0 && (
+                        <div key={day}>
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className={`w-2.5 h-2.5 rounded-full ${scheduleData[day].barColor}`}></div>
+                                <span className="text-[11px] font-black tracking-[0.25em] uppercase text-white/80">{scheduleData[day].short}</span>
+                            </div>
+                            
+                            <div className="space-y-0">
+                                {items.map((item, idx) => (
+                                    <div key={idx} className={`flex items-center justify-between py-4 border-b border-white/5 last:border-0`}>
+                                        <div className="flex items-center gap-4 flex-grow pr-4">
+                                            {/* Round Number */}
+                                            <div className="w-8 h-8 shrink-0 flex items-center justify-center text-sm font-[1000] text-white/30 border border-white/10 rounded-full italic">
+                                              {item.round}
+                                            </div>
+                                            
+                                            <div className="flex flex-col">
+                                                <span className="font-[900] text-[18px] uppercase tracking-tighter leading-none text-white mb-1.5">
+                                                    {item.member}
+                                                </span>
+                                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 opacity-40">
+                                                    <span className="text-[9px] font-bold leading-none">
+                                                        {item.time}
+                                                    </span>
+                                                    <span className={`text-[9px] font-[900] uppercase leading-none ${scheduleData[day].accent}`}>
+                                                        CLOSE LANE {item.close}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Ticket Count */}
+                                        <div className="text-right flex items-baseline gap-1.5 min-w-[70px] justify-end">
+                                            <span className="text-amber-400 font-[1000] text-2xl leading-none">{item.count}</span>
+                                            <span className="text-[9px] font-black opacity-30 uppercase tracking-widest leading-none">PCS</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-16 pt-8 border-t border-white/10 flex justify-between items-end">
+                    <div>
+                        <span className="text-[9px] font-black opacity-20 uppercase tracking-[0.3em] block mb-1">Grand Total</span>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-6xl font-[1000] text-amber-400 leading-none tracking-tighter">{totalTickets}</span>
+                            <span className="text-lg font-black text-amber-400/30 uppercase italic">ใบ</span>
+                        </div>
+                    </div>
+                    <div className="text-[8px] font-black opacity-20 text-right uppercase tracking-[0.15em] leading-relaxed">
+                        GENERATE YOUR SCHEDULE AT<br/>
+                        <span className="text-white/40">SHOT-PLANNER.BNK48.COM</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Floating Navigator */}
+      {totalTickets > 0 && (
+          <div className="fixed bottom-[18vh] left-5 right-5 z-40">
+              <button onClick={scrollToSummary} className="w-full bg-slate-900 text-white rounded-[32px] p-2 pr-8 shadow-2xl flex items-center justify-between border border-white/10 active:scale-[0.98] transition-transform">
+                  <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-amber-400 rounded-[20px] flex items-center justify-center text-black font-[1000] text-xl shadow-lg">{totalTickets}</div>
+                      <div className="text-left font-black uppercase tracking-tighter text-lg">ดูสรุปแผนการวน</div>
+                  </div>
+                  <ArrowDown className="text-amber-400 animate-bounce" size={24} strokeWidth={4} />
+              </button>
+          </div>
+      )}
+
+      {/* Filter Modal */}
+      {showFilterModal && (
+          <div className="fixed inset-0 z-[100] bg-[#020617] flex flex-col p-8 text-white">
+              <div className="flex justify-between items-center mb-10">
+                  <h3 className="font-[1000] text-4xl italic uppercase tracking-tighter leading-none">MEMBERS</h3>
+                  <button onClick={() => setShowFilterModal(false)} className="bg-white/10 p-5 rounded-[24px] text-amber-400"><X size={32} strokeWidth={4} /></button>
+              </div>
+              <div className="flex-1 overflow-y-auto pb-64 space-y-12">
+                  {['BIII', 'NV', 'Trainee'].map(group => {
+                      const names = Array.from(new Set([...scheduleData["Saturday, 13 JUN 26"].members, ...scheduleData["Sunday, 14 JUN 26"].members].filter(m => m.group === group).map(m => m.name)));
+                      return (
+                        <div key={group}>
+                          <div className="text-[12px] font-black uppercase tracking-[0.5em] text-white/30 mb-6">TEAM {group}</div>
+                          <div className="grid grid-cols-2 gap-3">
+                            {names.map(name => (
+                              <button key={name} onClick={() => setSelectedMembers(prev => prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name])} className={`px-5 py-5 rounded-[24px] border-2 transition-all text-sm font-black uppercase text-left ${selectedMembers.includes(name) ? 'border-amber-400 bg-amber-400 text-black' : 'border-white/5 bg-white/5 text-white/40'}`}>
+                                {name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                  })}
+              </div>
+              <div className="fixed bottom-[20vh] left-8 right-8 flex gap-4 bg-slate-950/80 backdrop-blur-md p-2 rounded-[32px] border border-white/5 shadow-2xl">
+                    <button onClick={() => setSelectedMembers([])} className="flex-1 py-5 font-black text-[12px] uppercase text-white/40 bg-white/5 rounded-[28px]">Reset</button>
+                    <button onClick={() => setShowFilterModal(false)} className="flex-[3] bg-amber-400 text-black py-5 rounded-[28px] font-[1000] uppercase tracking-[0.2em]">Apply Filter</button>
+              </div>
+          </div>
+      )}
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #F0F2F5; -webkit-tap-highlight-color: transparent; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        ::-webkit-scrollbar { display: none; }
+      `}} />
+    </div>
+  );
+};
+
+export default App;
